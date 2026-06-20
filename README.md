@@ -6,7 +6,7 @@
 
 ## Hermes Profile Check
 
-`hermes-profile-check`는 Hermes agent의 프로필별 상태를 점검하기 위한 스킬입니다. 사용자가 프로필 인증, Google Workspace CLI 인증, Gateway 실행 여부, Codex 연결 상태를 확인해 달라고 요청할 때 사용합니다.
+`hermes-profile-check`는 Hermes agent의 프로필별 상태를 점검하기 위한 스킬입니다. 사용자가 프로필 인증, Google Workspace CLI 인증, Gmail/Calendar/Tasks 사용 가능 여부, Gateway 실행 여부, Codex 연결 상태를 확인해 달라고 요청할 때 사용합니다.
 
 스킬 위치:
 
@@ -35,6 +35,9 @@ install-skill-from-github.py --repo kim-geon-admin/agent-skills --path skills/he
 - `<프로필명> 체크`
 - `Google Workspace CLI 인증 상태 확인해줘`
 - `GWS 인증 상태 확인해줘`
+- `Gmail 읽기 가능한지 봐줘`
+- `Calendar 일정 접근 체크해줘`
+- `Tasks 할 일 조회 가능한지 확인해줘`
 - `Gateway running 여부 봐줘`
 - `Codex 연결 상태 확인해줘`
 
@@ -43,7 +46,10 @@ install-skill-from-github.py --repo kim-geon-admin/agent-skills --path skills/he
 | 항목 | 우선 확인 방식 | 보조 확인 방식 |
 | --- | --- | --- |
 | 프로필 목록 | `hermes profile list` | `HERMES_HOME`, `profiles/<name>` |
-| Google Workspace CLI 인증 | `hermes -p <profile> auth status google-workspace-cli` | Google Workspace CLI 인증 저장소 또는 `auth/google_oauth.json` |
+| GWS CLI 인증 | `gws auth status` | `GOOGLE_WORKSPACE_CLI_CONFIG_DIR`, `~/.config/gws/*`, `auth/google_oauth.json` |
+| Gmail 읽기 | `gws gmail users getProfile --params '{"userId":"me"}'` | `gmail.readonly` scope 및 실제 API probe 결과 |
+| Calendar 일정 | `gws calendar calendarList list --params '{"maxResults":3}'` | Calendar scope 및 실제 API probe 결과 |
+| Google Tasks 할 일 | `gws tasks tasklists list --params '{"maxResults":3}'` | `tasks.readonly`/`tasks` scope 및 실제 API probe 결과 |
 | Gateway 상태 | `hermes gateway list`, `hermes -p <profile> gateway status --deep` | `gateway.pid`, `gateway_state.json` |
 | Codex 인증/연결 | `hermes -p <profile> auth status openai-codex`, `codex --version` | `auth.json`, `config.yaml` |
 
@@ -72,9 +78,9 @@ install-skill-from-github.py --repo kim-geon-admin/agent-skills --path skills/he
 기준 시각: YYYY-MM-DD HH:mm TZ
 확인 범위: default, coder
 
-| 프로필 | Google Workspace CLI | Gateway | Codex 연결 | 근거 | 조치 |
-| --- | --- | --- | --- | --- | --- |
-| default | 정상 | 실패 | 주의 | auth status, gateway status, config.yaml | hermes -p default gateway start |
+| 프로필 | GWS CLI | Gmail | Calendar | Tasks | Gateway | Codex 연결 | 근거 | 조치 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| default | 정상 | 정상 | 정상 | 주의(조회 가능/쓰기 확인 필요) | 실패 | 주의 | gws auth status, API probe, gateway status, config.yaml | hermes -p default gateway start |
 ```
 
 ## 관련 파일
