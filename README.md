@@ -6,7 +6,7 @@
 
 ## Hermes Profile Check
 
-`hermes-profile-check`는 Hermes agent의 프로필별 상태를 점검하기 위한 스킬입니다. 사용자가 프로필 인증, Gateway 실행 여부, Codex 연결 상태를 확인해 달라고 요청할 때 사용합니다.
+`hermes-profile-check`는 Hermes agent의 프로필별 상태를 점검하기 위한 스킬입니다. 사용자가 프로필 인증, Google Workspace CLI 인증, Gateway 실행 여부, Codex 연결 상태를 확인해 달라고 요청할 때 사용합니다.
 
 스킬 위치:
 
@@ -33,6 +33,7 @@ install-skill-from-github.py --repo kim-geon-admin/agent-skills --path skills/he
 - `전체 프로필 체크`
 - `<프로필명> 점검`
 - `<프로필명> 체크`
+- `Google Workspace CLI 인증 상태 확인해줘`
 - `GWS 인증 상태 확인해줘`
 - `Gateway running 여부 봐줘`
 - `Codex 연결 상태 확인해줘`
@@ -42,7 +43,7 @@ install-skill-from-github.py --repo kim-geon-admin/agent-skills --path skills/he
 | 항목 | 우선 확인 방식 | 보조 확인 방식 |
 | --- | --- | --- |
 | 프로필 목록 | `hermes profile list` | `HERMES_HOME`, `profiles/<name>` |
-| GWS/Google 인증 | `hermes -p <profile> auth status google-gemini-cli` | `auth/google_oauth.json` |
+| Google Workspace CLI 인증 | `hermes -p <profile> auth status google-workspace-cli` | Google Workspace CLI 인증 저장소 또는 `auth/google_oauth.json` |
 | Gateway 상태 | `hermes gateway list`, `hermes -p <profile> gateway status --deep` | `gateway.pid`, `gateway_state.json` |
 | Codex 인증/연결 | `hermes -p <profile> auth status openai-codex`, `codex --version` | `auth.json`, `config.yaml` |
 
@@ -71,7 +72,7 @@ install-skill-from-github.py --repo kim-geon-admin/agent-skills --path skills/he
 기준 시각: YYYY-MM-DD HH:mm TZ
 확인 범위: default, coder
 
-| 프로필 | GWS/Google 인증 | Gateway | Codex 연결 | 근거 | 조치 |
+| 프로필 | Google Workspace CLI | Gateway | Codex 연결 | 근거 | 조치 |
 | --- | --- | --- | --- | --- | --- |
 | default | 정상 | 실패 | 주의 | auth status, gateway status, config.yaml | hermes -p default gateway start |
 ```
