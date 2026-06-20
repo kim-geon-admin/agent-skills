@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hermes Profile Check"
+  short_description: "Check Hermes profile auth, Gateway, and Codex health."
+  default_prompt: "Use $hermes-profile-check to inspect Hermes profiles, authentication, Gateway status, and Codex connection health."
